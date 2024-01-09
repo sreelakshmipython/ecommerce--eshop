@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+          {% if category %}
+               {{category.description|truncatewords:155}}
+          {% else %}
+               welcome to skr store where you can buy...
+          {% endif %}
+{% endblock %}
+{% block title %}
+{% if category %}
+      {{ category.name}}-skr store
+    {% else %}
+see our new collection-skr store
+    {% endif %}
+{% endblock %}
+{% block content %}
+{% if category %}
+<div>
+    <div class="row my_row_class">
+        <div class="mx_auto">
+        <p><a href="{% url 'eshopapp:allProdCat' %}">our product collection</a></p>
+            </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="mx_auto">
+  {% if category %}
+    <img class="my_image" src="{{category.image.url}}" alt="{{category.name}}">
+</div>
+<br>
+<div>
+    <h1 class="text-centre my_title">{{category.name}}</h1>
+    <p class="text-justify">{{category.description}}</p>
+</div>
+{% else %}
+<div>
+    <img class="my_image my_image_padding" src="{% static 'img/banner.png' %}" alt="our products">
+</div>
+<br>
+<div>
+    <h1 class="text-centre my_title">our product collection</h1>
+    <p class="text-justify">your products, and help customers find the product. You don't have to provide every detail for each product.
+
+For products that don't have any variants, the Pricing, Inventory, and Shipping sections are displayed on the product details page. If you add variants, then those sections are no longer displayed on the product details page</p>
+</div>
+{% endif %}
+<div class="container">
+    <div class="row mx_auto">
+        {% for product in products.object_list %}
+        <div class="my_bottom_margi col-9 col-sm-12 col-md-4 xol-lg-4">
+            <div class="card text-center" style="min-width:18rem;">
+                <a href="{{product.get_url}}"><img class="card-img-top my_image" src="{{product.image.url}}" alt="{{product.name}}"></a>
+                <div class="card-body">
+                    <h4>{{product.name}}</h4>
+                    <p>{{product.price}}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="mx_auto">
+        {% if products.paginator.num_pages > 1 %}
+        <hr>
+        <div class="text-center">
+            {% for pg in products.paginator.page_range %}
+            <a href="?page={{pg}}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %}">{{pg}}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <br>
+</div>
+{% endblock %}
